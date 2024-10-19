@@ -1,4 +1,4 @@
-<form method="POST" action="?/login" class="justify-center item-center bg-white border shadow-[5px_5px_0px_black] shadow-md rounded px-8 pt-12 pb-10 mb-4 max-w-sm sm:max-w-md lg:max-w-lg mx-auto mt-20">
+<form method="POST" action="?/login" class="justify-center item-center bg-white border shadow-[5px_5px_0px_black] rounded px-8 pt-12 pb-10 mb-4 max-w-sm sm:max-w-md lg:max-w-lg mx-auto mt-20">
 	<h2 class="text-2xl font-bold text-center mb-6 text-gray-700">Login</h2>
 	
 	<!-- Email -->
@@ -11,7 +11,7 @@
 		type="email"
 		id="email"
 		placeholder="Enter your email"
-		class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+		class="focus:shadow-[5px_5px_0px_black] shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 		required
 	  />
 	</div>
@@ -26,7 +26,7 @@
 		type="password"
 		id="password"
 		placeholder="Enter your password"
-		class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+		class="focus:shadow-[5px_5px_0px_black] shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
 		required
 	  />
 	</div>
@@ -46,14 +46,13 @@
 		Sign up
 	  </button>
 	</div>
-	
-	<!-- Forgot Password Link -->
-	<p class="text-sm text-center text-gray-500 mt-4">
-	  <a href="#" class="text-blue-500 hover:underline">Forgot your password?</a>
-	</p>
   </form>
   
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <form class="justify-center items-center bg-white border shadow-[6px_6px_0px_black] rounded px-8 pt-12 pb-10 mb-10 max-w-sm sm:max-w-md lg:max-w-lg mx-auto mt-20">
+    <h2 class="text-xl font-bold text-center mb-6 text-gray-700">Mohon untuk klik Signup sekali saja.</h2>
+	<h2 class="text-xl font-bold text-center mb-6 text-gray-700">Bila sudah, maka cek Gmail masing masing dan klik tautan yang disediakan ya :)</h2>
+
+  </form>
+  
   
   
