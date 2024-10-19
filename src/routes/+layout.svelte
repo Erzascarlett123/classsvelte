@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { invalidate, goto } from '$app/navigation'; // `goto` ditambahkan untuk redirect
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import NavbarGuru from '$lib/component/guru.svelte';
@@ -26,6 +26,7 @@
 	onMount(() => {
 	  const savedTheme = localStorage.getItem('theme') || 'light';
 	  toggleTheme(savedTheme as 'dark' | 'light');
+	  checkSession(); // Memanggil fungsi untuk cek sesi
 	});
   
 	// Logika navbar seperti yang sudah ada
@@ -33,30 +34,53 @@
 	export let data;
 	$: ({ session, supabase } = data);
   
-	onMount(() => {
-	  const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+	// Fungsi untuk mengecek sesi pengguna
+	async function checkSession() {
+	  const { data: { session } } = await supabase.auth.getSession(); // Menggunakan getSession
+  
+	  if (!session) {
+		// Jika pengguna tidak memiliki sesi (belum login atau signup), arahkan ke halaman /auth
+		goto('/auth');
+	  }
+  
+	  const { data: authListener } = supabase.auth.onAuthStateChange((_, newSession) => {
 		if (newSession?.expires_at !== session?.expires_at) {
 		  invalidate('supabase:auth');
 		}
 	  });
   
-	  return () => data.subscription.unsubscribe();
-	});
+	  // Unsubscribe listener saat komponen di-unmount
+	  return () => {
+		if (authListener.subscription) {
+		  authListener.subscription.unsubscribe(); // Menggunakan unsubscribe dari subscription
+		}
+	  };
+	}
   
+	// Logika untuk menyembunyikan navbar di halaman tertentu
 	$: {
-	  const hideNavbarOnPaths = ['/private/dashboard guru','/private/dashboard guru/Send', '/auth','/auth/error', '/', '/private/dashboard murid','/private'];
+	  const hideNavbarOnPaths = [
+		'/private/dashboard guru', 
+		'/private/dashboard guru/Send', 
+		'/auth', 
+		'/auth/error', 
+		'/', 
+		'/private/dashboard murid', 
+		'/private'
+	  ];
 	  showNavbar = !hideNavbarOnPaths.includes($page.url.pathname);
 	}
   </script>
-
-{#if showNavbar}
-  {#if $page.url.pathname.includes('guru')}
-    <NavbarGuru />
+  
+  <!-- Menampilkan Navbar jika kondisi terpenuhi -->
+  {#if showNavbar}
+	{#if $page.url.pathname.includes('guru')}
+	  <NavbarGuru />
+	{/if}
+	<Navbar />
   {/if}
-  <Navbar />
-{/if}
-
-<div class="">
-</div>
-
-<slot />
+  
+  <div class="container mx-auto">
+	<slot />
+  </div>
+  
