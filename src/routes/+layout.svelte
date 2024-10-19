@@ -6,6 +6,28 @@
 	import Navbar from '$lib/component/navbar.svelte';
 	import "../app.css";
   
+	// Variabel untuk toggle tema
+	let isDarkMode = false;
+  
+	// Fungsi untuk mengatur tema
+	function toggleTheme(theme: 'dark' | 'light') {
+	  if (theme === 'dark') {
+		document.documentElement.classList.add('dark');
+		localStorage.setItem('theme', 'dark');
+		isDarkMode = true;
+	  } else {
+		document.documentElement.classList.remove('dark');
+		localStorage.setItem('theme', 'light');
+		isDarkMode = false;
+	  }
+	}
+  
+	// Pada mount, cek tema yang tersimpan di localStorage
+	onMount(() => {
+	  const savedTheme = localStorage.getItem('theme') || 'light';
+	  toggleTheme(savedTheme as 'dark' | 'light');
+	});
+  
 	// Logika navbar seperti yang sudah ada
 	let showNavbar = true;
 	export let data;
@@ -34,3 +56,7 @@
   <Navbar />
 {/if}
 
+<div class="">
+</div>
+
+<slot />
