@@ -7,3 +7,8 @@ export const load: LayoutServerLoad = async ({ locals: { safeGetSession }, cooki
     cookies: cookies.getAll(),
   }
 }
+
+// src/routes/$types.ts
+export interface RouteParams {
+  class: string; // Mendefinisikan class sebagai string
+}

@@ -41,7 +41,7 @@
   </script>
   <Guru />
   
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-6">
+  <div class="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
     <!-- Pilihan Kelas -->
     <h2 class="text-3xl font-bold mb-[9vh] text-center">Pilih Kelas</h2>
     <div class="mb-[6vh]">

@@ -60,12 +60,12 @@
 	// Logika untuk menyembunyikan navbar di halaman tertentu
 	$: {
 	  const hideNavbarOnPaths = [
-		'/private/dashboard guru', 
-		'/private/dashboard guru/Send', 
+		'/private/dashboard%20guru', 
+		'/private/dashboard%20guru/Send', 
 		'/auth', 
 		'/auth/error', 
 		'/', 
-		'/private/dashboard murid', 
+		'/private/dashboard%20murid', 
 		'/private'
 	  ];
 	  showNavbar = !hideNavbarOnPaths.includes($page.url.pathname);
