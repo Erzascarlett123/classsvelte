@@ -1,66 +1,92 @@
 <script lang="ts">
-    import { createClient } from '@supabase/supabase-js';
+    import { goto } from '$app/navigation'; // Impor goto untuk navigasi
+    import dummyUsers from '../../dummyData.json'; // Memperbaiki cara impor
 
-    // Inisialisasi klien Supabase
-    const supabaseUrl = "https://kvyuvciubszzmebpbsqg.supabase.co";
-    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXV2Y2l1YnN6em1lYnBic3FnIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MjkwNDU4MzYsImV4cCI6MjA0NDYyMTgzNn0.ANaAi6ALuRAh-mo1b4ayroMFF1XqTTbZDiZzRnDgSKo";
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    interface User {
+        name: string;
+        email: string;
+        password: string;
+    }
 
-    let email: string = "";
-    let password: string = "";
+    // Menggunakan data dummy sebagai state
+    let users: User[] = [...dummyUsers]; // Salin data dari dummyData.json
+    let email = '';
+    let password = '';
+    let errorMessage = '';
+    let successMessage = '';
 
     // Fungsi login
-    async function login(event: Event) {
-        event.preventDefault();
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-        if (error) {
-            alert("Login gagal: " + error.message);
+    function handleLogin() {
+        const user: User | undefined = users.find((user: User) => user.email === email && user.password === password);
+        
+        if (user) {
+            successMessage = `Login successful! Welcome, ${user.name}`;
+            errorMessage = '';
+
+            const token = btoa(`${user.email}:${user.password}`);
+
+              // Simpan token di localStorage
+        localStorage.setItem('token', token);
+
+            // Mengalihkan pengguna ke halaman '/' setelah 1 detik
+            setTimeout(() => {
+                goto('/'); // Ganti dengan jalur yang sesuai
+            }, 1000);
         } else {
-            alert("Login berhasil");
-            // Redirect atau lakukan tindakan lain setelah login
+            errorMessage = 'Invalid email or password.';
+            successMessage = '';
         }
     }
 </script>
 
 <!-- Form Login -->
-<form on:submit={login} class="bg-white shadow-lg rounded-lg py-5 px-6 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto mt-10 flex flex-col space-y-4">
-    <h2 class="text-lg font-bold text-center mb-4 text-gray-800">Login</h2>
-    
-    <!-- Email -->
-    <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">Email</label>
-        <input
-            name="email"
-            type="email"
-            id="email"
-            placeholder="Enter your email"
-            bind:value={email}
-            class="focus:ring-2 focus:ring-blue-500 border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none"
-            required
-        />
-    </div>
-    
-    <!-- Password -->
-    <div class="mb-6">
-        <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">Password</label>
-        <input
-            name="password"
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            bind:value={password}
-            class="focus:ring-2 focus:ring-blue-500 border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none"
-            required
-        />
-    </div>
-    
-    <button
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none"
-        type="submit"
-    >
-        Login
-    </button>
-</form>
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <form on:submit|preventDefault={handleLogin} class="bg-white shadow-lg rounded-lg py-8 px-10 max-w-sm mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-center text-gray-800">Login</h2>
+        
+        <div>
+            <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">Email</label>
+            <input
+                name="email"
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                bind:value={email}
+                class="focus:ring-2 focus:ring-blue-500 border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none transition duration-200"
+                required
+            />
+        </div>
+        
+        <div>
+            <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">Password</label>
+            <input
+                name="password"
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                bind:value={password}
+                class="focus:ring-2 focus:ring-blue-500 border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none transition duration-200"
+                required
+            />
+        </div>
+        
+        <button
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded focus:outline-none transition duration-200"
+            type="submit"
+        >
+            Login
+        </button>
+        
+        {#if errorMessage}
+            <p class="error text-red-500">{errorMessage}</p>
+        {/if}
+        {#if successMessage}
+            <p class="success text-green-500">{successMessage}</p>
+        {/if}
+    </form>
+</div>
+
+<style>
+    .error { color: red; }
+    .success { color: green; }
+</style>
